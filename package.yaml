@@ -22,7 +22,9 @@ description:         Please see the README on GitHub at <https://github.com/drom
 dependencies:
 - base >= 4.7 && < 5
 
-data-files: firstnames.txt
+data-files:
+    - random_names.txt
+    - random_group_names.txt
 data-dir: data
 
 library:

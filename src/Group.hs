@@ -1,26 +1,37 @@
 module Group
-    ( createPerson
-    , createGroup
-    , group
+    ( createGroup
+    , findMemberById
+    , findMemberByFirstName
+    , addMemberToGroup
+    , removeMemberFromGroup
     ) where
 
-import Types (Person(..), Group(..))
+import Types (Member(..), Group(..))
+import Member
 
-createPerson :: String -> Int -> Person
-createPerson fName i = Person {firstName=fName, ident=i}
+createGroup :: String -> [Member] -> Group
+createGroup groupName people = Group {groupName=groupName, members=newMembers}
+    where newMembers = map (\p -> updateMembership p (Just groupName) True) people
 
-createGroup :: String -> [Person] -> Group
-createGroup tName people = Group {teamName=tName, members=people}
+findMemberById :: Int -> [Member] -> Maybe Member
+findMemberById _ []    = Nothing
+findMemberById i (m:ms)
+    | i == memberId m  = Just m
+    | otherwise        = findMemberById i ms
 
-group :: Int -> [a] -> [[a]]
-group _ []      = [[]]
-group size people
-    | size <= 0 = [[]]
-    | size >  p = [[]]
-    | size == p = [people]
-    | otherwise = split size people
-        where p = length people
+findMemberByFirstName :: String -> [Member] -> Maybe Member
+findMemberByFirstName _ [] = Nothing
+findMemberByFirstName name (m:ms)
+    | name == firstName m  = Just m
+    | otherwise            = findMemberByFirstName name ms
 
-split :: Int -> [a] -> [[a]]
-split _ []     = []
-split s xs = take s xs : split s (drop s xs)
+addMemberToGroup :: Member -> Group -> Group
+addMemberToGroup member group = createGroup sameGrpName (newMember:groupMembers)
+    where sameGrpName  = groupName group
+          newMember    = updateMembership member (Just sameGrpName) True
+          groupMembers = members group
+
+removeMemberFromGroup :: Member -> Group -> Group
+removeMemberFromGroup member group = createGroup sameGrpName updatedMembers
+    where updatedMembers = filter (\m -> memberId m /= memberId member) (members group)
+          sameGrpName    = groupName group

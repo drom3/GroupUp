@@ -1,9 +1,14 @@
 module Types where
 
-data Person = Person { firstName :: String
-                     , ident     :: Int
+data Member = Member { memberId   :: Int
+                     , firstName  :: String
+                     , memberOf   :: Maybe String
+                     , membership :: Bool
                      } deriving (Show)
 
-data Group = Group { teamName  :: String
-                    , members  :: [Person]
-                    } deriving (Show)
+data Group = Group { groupName :: String
+                   , members   :: [Member]
+                   } deriving (Show)
+
+data Community = Community { groups :: [Group]
+                           } deriving (Show)
